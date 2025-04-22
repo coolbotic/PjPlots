@@ -684,7 +684,7 @@ namespace PjPlot {
     using Mat3View = ArrayNd<T, Size, false>;
 
     template <Colour Val>
-        requires (Val < Colour::COUNT)
+        requires (Val == Colour::WHITE || Val == Colour::BLACK)
     [[nodiscard]] constexpr static auto to_string() -> std::string_view {
         if constexpr (Val == Colour::WHITE) {
             return "white";
