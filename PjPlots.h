@@ -690,8 +690,6 @@ namespace PjPlot {
             return "white";
         } else if constexpr (Val == Colour::BLACK) {
             return "black";
-        } else {
-            static_assert(always_false<void>::value, "Error: unhandled type");
         }
     }
 
