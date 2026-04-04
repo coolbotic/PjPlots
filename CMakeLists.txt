@@ -31,7 +31,7 @@ install(
     FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/PjPlots.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/utils.hpp
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PjPlots
 )
 
 install(
