@@ -1,14 +1,61 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 
-project(PjPlots)
+project(PjPlots VERSION 1.0.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_library(PjPlots INTERFACE)
+add_library(PjPlots::PjPlots ALIAS PjPlots)
 
-if (PJPLOTS_ENABLE_TESTS MATCHES ON)
-    message("Testing enabled")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE PJPLOT_ENABLE_TESTS)
+target_compile_features(PjPlots INTERFACE cxx_std_20)
+
+target_include_directories(PjPlots
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+option(PJPLOTS_ENABLE_TESTS "Enable PjPlots compile-time tests" OFF)
+
+if(PJPLOTS_ENABLE_TESTS)
+    target_compile_definitions(PjPlots INTERFACE PJPLOT_ENABLE_TESTS)
 endif()
+
+install(
+    TARGETS PjPlots
+    EXPORT PjPlotsTargets
+)
+
+install(
+    FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/PjPlots.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/utils.hpp
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+    EXPORT PjPlotsTargets
+    FILE PjPlotsTargets.cmake
+    NAMESPACE PjPlots::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PjPlots
+)
+
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/PjPlotsConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/PjPlotsConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PjPlots
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/PjPlotsConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/PjPlotsConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/PjPlotsConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PjPlots
+)
