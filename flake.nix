@@ -37,7 +37,7 @@
           description = "Header-only modern C++ plotting library";
           homepage = "https://github.com/PatJRobinson/pjplots";
           license = licenses.bsd3;
-          platforms = platforms.linux;
+          platforms = platforms.linux ++ platforms.darwin;
         };
       };
 
